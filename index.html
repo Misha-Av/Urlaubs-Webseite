@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Urlaubs-Packliste</title>
+  <link rel="stylesheet" href="/CSS/planer.css">
+</head>
+<body>
+
+<div id="home-page" class="welcome-screen">
+  <img src="../Bilder/strand.jpg" alt="Strand Urlaub" class="welcome-img-top">
+  
+  <h1>🧳 Gruppen-Packliste für den Urlaub</h1>
+  <p>Bereite deinen Urlaub stressfrei vor. Verwalte Checklisten für bis zu 6 Personen zeitgleich.</p>
+
+<div class="countdown-container">
+    <label for="travel-date">Wann geht es los?</label>
+    <input type="date" id="travel-date" onchange="saveTravelDate()">
+    <div id="countdown-display">Lade Countdown...</div>
+  </div>
+
+  <div class="countdown-container" style="margin-top: 15px;">
+  <label for="weather-city">Wetter am Reiseziel prüfen:</label>
+  <div style="display: flex; gap: 5px; justify-content: center; margin-bottom: 8px; flex-wrap: wrap;">
+    <input type="text" id="weather-city" placeholder="Ort (z.B. Mallorca)" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; width: 130px;">
+    <input type="text" id="weather-temp" placeholder="Grad (Offline-Edit)" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; width: 90px;">
+    <input type="text" id="weather-desc" placeholder="Zustand (Offline-Edit)" style="padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; width: 120px;">
+  </div>
+  
+  <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 10px;">
+    <button class="add-btn" onclick="getLiveWeather()" style="padding: 6px 12px; margin: 0;">Live Suchen ☀️</button>
+    <button class="add-btn" onclick="saveOfflineWeather()" style="padding: 6px 12px; margin: 0; background-color: #f4a261;">Offline Sichern 💾</button>
+  </div>
+  
+  <div id="weather-display" style="font-weight: bold; color: #264653; font-size: 15px; border-top: 1px dashed #e9d8a6; padding-top: 8px; margin-top: 5px;">
+    Noch kein Wetter geladen oder gemerkt!
+  </div>
+</div>
+
+<div class="countdown-container vault-container" style="margin-top: 15px;">
+    <div class="vault-header" onclick="toggleVault()">
+      <label style="margin: 0; cursor: pointer;">🔐 Wichtige Reise-Dokumente & Infos</label>
+      <span id="vault-status-icon">▶</span>
+    </div>
+    
+    <div id="vault-content" style="display: none; margin-top: 15px; border-top: 1px dashed #e9d8a6; padding-top: 15px; text-align: left;">
+      <div class="vault-field">
+        <label>🏨 Hotel-Adresse & Check-In Zeit:</label>
+        <textarea id="vault-hotel" rows="2" placeholder="z.B. Hotel Sunshine, Strandstraße 5..."></textarea>
+      </div>
+      <div class="vault-field">
+        <label>✈️ Flugnummern / Zugverbindungen:</label>
+        <input type="text" id="vault-transport" placeholder="z.B. Hinflug: EW1234...">
+      </div>
+      <div class="vault-field">
+        <label>🎟️ Buchungscodes & Tickets (Mietwagen, Fähre etc.):</label>
+        <input type="text" id="vault-booking" placeholder="z.B. Mietwagen-Code: HERTZ-9876543">
+      </div>
+      <div class="vault-field">
+        <label>📞 Wichtige Telefonnummern:</label>
+        <input type="text" id="vault-phone" placeholder="z.B. Versicherung Notruf: +49...">
+      </div>
+      <div class="vault-field">
+      <label>📝 Sonstige Notizen & wichtige Infos:</label>
+      <textarea id="vault-notes" rows="4" placeholder="z.B. WLAN-Passwort: Urlaub2026!, PIN für den Schlüsselsafe, Packstation-Codes..."></textarea>
+    </div>
+      <button class="add-btn" onclick="saveVaultData()" style="width: 100%; margin-top: 10px; background-color: #e76f51;">Daten im Tresor sichern 💾</button>
+    </div>
+  </div>
+
+  <img src="/Bilder/koffer.jpg" alt="Reisegepäck" class="welcome-img-center">
+  
+
+  <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+    <button class="start-btn" onclick="showChecklistDirect()">Zur Packliste ▶</button>
+    <button class="start-btn view-toggle-btn" onclick="showActivitiesDirect()">Zu den Aktivitäten 🎯</button>
+  </div>
+</div>
+
+<div id="checklist-page" class="checklist-view">
+
+  <h1>🧳 Gruppen-Packliste für den Urlaub</h1>
+
+  <div class="navigation-container">
+  <button id="btn-prev" class="nav-btn" onclick="navigatePerson(-1)">◀ Zurück</button>
+  <button class="nav-btn" onclick="showHome()">🏠 Home</button>
+  <button id="btn-next" class="nav-btn" onclick="navigatePerson(1)">Weiter ▶</button>
+  <span id="person-indicator">Person 1 von 6</span>
+  <button class="nav-btn reset-btn" onclick="resetAllLists()">🗑️ Liste leeren</button>
+  <button id="btn-toggle-view" class="nav-btn view-toggle-btn" onclick="togglePacklistActivityView()">🎯 Zu den Aktivitäten</button>
+</div>
+
+  <div class="progress-container">
+    <div id="progress-bar">0%</div>
+  </div>
+
+  <main class="grid-container" id="activity-area" style="display: none;">
+  <div class="person-card active">
+    <h2>🎯 Urlaubs-Aktivitäten & Ausflüge</h2>
+    <p style="font-size: 14px; color: #264653; margin-bottom: 15px;">
+      Sammelt hier gemeinsam Ideen für euren Urlaub. Was wollt ihr erleben?
+    </p>
+    
+    <h3 style="font-size: 14px; color: #e76f51; text-transform: uppercase; margin-top: 20px; margin-bottom: 10px; letter-spacing: 0.5px;">
+      🗺️ Unsere Erlebnisse & Pläne
+    </h3>
+
+    <div id="global-activity-list"></div>
+
+    <div class="add-item-form" style="margin-top: 25px; border-top: 2px dashed #e9d8a6; padding-top: 15px;">
+      <input type="text" id="input-activity" placeholder="Eigene Idee hinzufügen...">
+      <button class="add-btn" onclick="addActivityItem()">Hinzufügen</button>
+    </div>
+  </div>
+</main>
+
+  <main class="grid-container" id="packlist-area">
+
+    <!-- PERSON 1 -->
+    <section class="person-card active" id="card-p1">
+      <h2>👤 <input type="text" class="name-input" id="name-p1" value="Person 1" maxlength="15"></h2>
+      <div class="todo-list">
+        <h3>📅 Vorbereitungen & Erledigungen</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t1"><span>Reisepass Gültigkeit prüfen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t2"><span>Auslandskrankenversicherung abschließen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t3"><span>Notfallkontakte hinterlegen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t4"><span>Flugtickets / Buchungen ausdrucken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t5"><span>Nachbarn wegen Blumen/Post bitten</span></label>
+        <h3>🧳 Packliste</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t6"><span>Reisepass / Personalausweis</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t7"><span>Krankenkassenkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t8"><span>Bargeld & Kreditkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t9"><span>Zahnbürste & Zahnpasta</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t10"><span>Duschgel & Shampoo</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t11"><span>Smartphone & Ladekabel</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t12"><span>Powerbank</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t13"><span>Unterwäsche & Socken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t14"><span>T-Shirts & Hosen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p1-t15"><span>Schuhe & Jacke</span></label>
+    
+<div class="custom-items-container">
+    <h3>➕ Eigene Dinge</h3>
+  
+    <div class="custom-items-list" id="custom-list-p1"></div>
+  
+    <div class="add-item-form">
+    <input type="text" id="input-p1" placeholder="z.B. Schnorchel, Buch..." maxlength="30">
+    <button class="add-btn" onclick="addCustomItem('p1')">Hinzufügen</button>
+    </div>
+</div>
+    </div>
+    </section>
+
+    <!-- PERSON 2 -->
+    <section class="person-card" id="card-p2">
+      <h2>👤 <input type="text" class="name-input" id="name-p2" value="Person 2" maxlength="15"></h2>
+      <div class="todo-list">
+        <h3>📅 Vorbereitungen & Erledigungen</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t1"><span>Reisepass Gültigkeit prüfen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t2"><span>Auslandskrankenversicherung abschließen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t3"><span>Notfallkontakte hinterlegen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t4"><span>Flugtickets / Buchungen ausdrucken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t5"><span>Nachbarn wegen Blumen/Post bitten</span></label>
+        <h3>🧳 Packliste</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t6"><span>Reisepass / Personalausweis</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t7"><span>Krankenkassenkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t8"><span>Bargeld & Kreditkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t9"><span>Zahnbürste & Zahnpasta</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t10"><span>Duschgel & Shampoo</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t11"><span>Smartphone & Ladekabel</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t12"><span>Powerbank</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t13"><span>Unterwäsche & Socken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t14"><span>T-Shirts & Hosen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p2-t15"><span>Schuhe & Jacke</span></label>
+    
+    <div class="custom-items-container">
+        <h3>➕ Eigene Dinge</h3>
+  
+        <div class="custom-items-list" id="custom-list-p2"></div>
+  
+        <div class="add-item-form">
+        <input type="text" id="input-p2" placeholder="z.B. Schnorchel, Buch..." maxlength="30">
+        <button class="add-btn" onclick="addCustomItem('p2')">Hinzufügen</button>
+        </div>
+    </div>
+    </div>
+    </section>
+
+    <!-- PERSON 3 -->
+    <section class="person-card" id="card-p3">
+      <h2>👤 <input type="text" class="name-input" id="name-p3" value="Person 3" maxlength="15"></h2>
+      <div class="todo-list">
+        <h3>📅 Vorbereitungen & Erledigungen</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t1"><span>Reisepass Gültigkeit prüfen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t2"><span>Auslandskrankenversicherung abschließen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t3"><span>Notfallkontakte hinterlegen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t4"><span>Flugtickets / Buchungen ausdrucken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t5"><span>Nachbarn wegen Blumen/Post bitten</span></label>
+        <h3>🧳 Packliste</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t6"><span>Reisepass / Personalausweis</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t7"><span>Krankenkassenkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t8"><span>Bargeld & Kreditkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t9"><span>Zahnbürste & Zahnpasta</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t10"><span>Duschgel & Shampoo</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t11"><span>Smartphone & Ladekabel</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t12"><span>Powerbank</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t13"><span>Unterwäsche & Socken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t14"><span>T-Shirts & Hosen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p3-t15"><span>Schuhe & Jacke</span></label>
+    <div class="custom-items-container">
+        <h3>➕ Eigene Dinge</h3>
+  
+        <div class="custom-items-list" id="custom-list-p3"></div>
+  
+        <div class="add-item-form">
+        <input type="text" id="input-p3" placeholder="z.B. Schnorchel, Buch..." maxlength="30">
+        <button class="add-btn" onclick="addCustomItem('p3')">Hinzufügen</button>
+        </div>
+    </div>
+      </div>
+    </section>
+
+    <!-- PERSON 4 -->
+    <section class="person-card" id="card-p4">
+      <h2>👤 <input type="text" class="name-input" id="name-p4" value="Person 4" maxlength="15"></h2>
+      <div class="todo-list">
+        <h3>📅 Vorbereitungen & Erledigungen</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t1"><span>Reisepass Gültigkeit prüfen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t2"><span>Auslandskrankenversicherung abschließen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t3"><span>Notfallkontakte hinterlegen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t4"><span>Flugtickets / Buchungen ausdrucken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t5"><span>Nachbarn wegen Blumen/Post bitten</span></label>
+        <h3>🧳 Packliste</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t6"><span>Reisepass / Personalausweis</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t7"><span>Krankenkassenkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t8"><span>Bargeld & Kreditkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t9"><span>Zahnbürste & Zahnpasta</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t10"><span>Duschgel & Shampoo</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t11"><span>Smartphone & Ladekabel</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t12"><span>Powerbank</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t13"><span>Unterwäsche & Socken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t14"><span>T-Shirts & Hosen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p4-t15"><span>Schuhe & Jacke</span></label>
+    <div class="custom-items-container">
+        <h3>➕ Eigene Dinge</h3>
+  
+        <div class="custom-items-list" id="custom-list-p4"></div>
+  
+        <div class="add-item-form">
+        <input type="text" id="input-p4" placeholder="z.B. Schnorchel, Buch..." maxlength="30">
+        <button class="add-btn" onclick="addCustomItem('p4')">Hinzufügen</button>
+        </div>
+    </div>
+      </div>
+    </section>
+
+    <!-- PERSON 5 -->
+    <section class="person-card" id="card-p5">
+      <h2>👤 <input type="text" class="name-input" id="name-p5" value="Person 5" maxlength="15"></h2>
+      <div class="todo-list">
+        <h3>📅 Vorbereitungen & Erledigungen</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t1"><span>Reisepass Gültigkeit prüfen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t2"><span>Auslandskrankenversicherung abschließen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t3"><span>Notfallkontakte hinterlegen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t4"><span>Flugtickets / Buchungen ausdrucken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t5"><span>Nachbarn wegen Blumen/Post bitten</span></label>
+        <h3>🧳 Packliste</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t6"><span>Reisepass / Personalausweis</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t7"><span>Krankenkassenkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t8"><span>Bargeld & Kreditkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t9"><span>Zahnbürste & Zahnpasta</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t10"><span>Duschgel & Shampoo</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t11"><span>Smartphone & Ladekabel</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t12"><span>Powerbank</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t13"><span>Unterwäsche & Socken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t14"><span>T-Shirts & Hosen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p5-t15"><span>Schuhe & Jacke</span></label>
+    <div class="custom-items-container">
+        <h3>➕ Eigene Dinge</h3>
+  
+        <div class="custom-items-list" id="custom-list-p5"></div>
+  
+        <div class="add-item-form">
+        <input type="text" id="input-p5" placeholder="z.B. Schnorchel, Buch..." maxlength="30">
+        <button class="add-btn" onclick="addCustomItem('p5')">Hinzufügen</button>
+        </div>
+    </div>  
+      </div>
+    </section>
+
+    <!-- PERSON 6 -->
+    <section class="person-card" id="card-p6">
+      <h2>👤 <input type="text" class="name-input" id="name-p6" value="Person 6" maxlength="15"></h2>
+      <div class="todo-list">
+        <h3>📅 Vorbereitungen & Erledigungen</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t1"><span>Reisepass Gültigkeit prüfen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t2"><span>Auslandskrankenversicherung abschließen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t3"><span>Notfallkontakte hinterlegen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t4"><span>Flugtickets / Buchungen ausdrucken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t5"><span>Nachbarn wegen Blumen/Post bitten</span></label>
+        <h3>🧳 Packliste</h3>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t6"><span>Reisepass / Personalausweis</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t7"><span>Krankenkassenkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t8"><span>Bargeld & Kreditkarte</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t9"><span>Zahnbürste & Zahnpasta</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t10"><span>Duschgel & Shampoo</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t11"><span>Smartphone & Ladekabel</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t12"><span>Powerbank</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t13"><span>Unterwäsche & Socken</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t14"><span>T-Shirts & Hosen</span></label>
+        <label class="todo-item"><input type="checkbox" class="save-cb" id="p6-t15"><span>Schuhe & Jacke</span></label>
+    <div class="custom-items-container">
+        <h3>➕ Eigene Dinge</h3>
+  
+        <div class="custom-items-list" id="custom-list-p6"></div>
+  
+        <div class="add-item-form">
+        <input type="text" id="input-p6" placeholder="z.B. Schnorchel, Buch..." maxlength="30">
+        <button class="add-btn" onclick="addCustomItem('p6')">Hinzufügen</button>
+        </div>
+    </div>
+      </div>
+    </section>
+</div>
+  </main>
+
+  <script src="/Javauebung/planer.js"></script>
+</body>
+</html>
