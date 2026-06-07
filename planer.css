@@ -1,0 +1,407 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f1de; /* Warmer, heller Sand-Hintergrund */
+  padding: 20px;
+  text-align: center;
+  color: #264653; /* Gut lesbares Ozean-Dunkelblau für den Text */
+}
+
+h1 {
+  color: #0077b6; /* Tiefes Meeresblau */
+  font-size: 26px;
+}
+
+/* ==========================================
+   STYLES FÜR DIE NEUE STARTSEITE (HOME)
+   ========================================== */
+
+/* Blendet die Packlisten-Ansicht standardmäßig beim Start aus */
+.checklist-view {
+  display: none;
+}
+
+/* Zentraler Welcome-Container im Design deiner Personenkarten */
+.welcome-screen {
+  max-width: 450px;
+  margin: 60px auto;
+  background: #fefae0; /* Sehr helles Strandmatten-Gelb */
+  padding: 35px 25px;
+  border: 1px solid #e9d8a6;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.welcome-screen h1 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.welcome-screen p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #264653;
+  margin-bottom: 25px;
+}
+
+/* Großer Start-Button im Stil deiner Navigationsknöpfe */
+.start-btn {
+  background-color: #e76f51; /* Warmes Terrakotta für Signalwirkung */
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: background 0.2s, transform 0.1s;
+}
+
+.start-btn:hover {
+  background-color: #f4a261; /* Helleres Orange beim Hovern */
+}
+
+.start-btn:active {
+  transform: scale(0.98);
+}
+
+/* Unauffälliger Zurück-Link für die Checklisten-Ansicht */
+.back-home-btn {
+  display: inline-block;
+  margin: 0 auto 20px auto;
+  background: none;
+  border: none;
+  color: #e76f51;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+
+.back-home-btn:hover {
+  color: #0077b6;
+}
+
+/* ==========================================
+   BESTEHENDE MARITIME STYLES
+   ========================================== */
+
+.navigation-container {
+  margin: 20px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.nav-btn {
+  background-color: #0077b6; /* Maritime Button-Farbe */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.nav-btn:hover {
+  background-color: #0096c7; /* Helleres Blau beim Drüberfahren */
+}
+
+.nav-btn:active {
+  transform: scale(0.98);
+}
+
+#person-indicator {
+  font-weight: bold;
+  font-size: 18px;
+  width: 100%;
+  margin-top: 10px;
+  color: #264653;
+}
+
+.grid-container {
+  max-width: 450px;
+  margin: 0 auto;
+}
+
+.person-card {
+  display: none;
+  background: #fefae0;
+  padding: 25px;
+  border: 1px solid #e9d8a6;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  text-align: left;
+}
+
+.person-card.active {
+  display: block;
+}
+
+.person-card h2 {
+  margin-top: 0;
+  border-bottom: 2px solid #e9d8a6;
+  padding-bottom: 10px;
+  color: #0077b6;
+}
+
+.todo-list h3 {
+  font-size: 14px;
+  color: #e76f51;
+  text-transform: uppercase;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.todo-item:hover {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+input[type="checkbox"] {
+  margin-right: 12px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #0077b6;
+}
+
+input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  color: #a8dadc;
+}
+
+.progress-container {
+    max-width: 450px;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    margin: 0 auto 20px auto;
+    height: 22px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+#progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #e76f51;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.bg-red { background-color: #e76f51 !important; }
+.bg-orange { background-color: #f4a261 !important; }
+.bg-yellow { background-color: #e9c46a !important; }
+.bg-green { background-color: #2a9d8f !important; }
+
+.custom-items-container {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 2px dashed #e9d8a6;
+}
+
+.add-item-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.add-item-form input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+}
+
+.add-btn {
+    padding: 8px 15px;
+    background-color: #2a9d8f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.add-btn:hover {
+    background-color: #20786e;
+}
+
+.custom-item {
+    display: flex;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.name-input {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  color: #0077b6;
+  font-family: inherit;
+  width: 80%;
+  cursor: pointer;
+  border-bottom: 2px dashed transparent;
+  transition: border-color 0.2s;
+}
+
+.name-input:focus {
+  outline: none;
+  border-bottom-color: #e76f51;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  padding-left: 5px;
+}
+
+.welcome-img-top {
+  width: calc(100% + 50px);
+  margin-left: -25px;     
+  margin-top: -35px;      
+  height: 340px;
+  object-fit: cover;       
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  margin-bottom: 25px;
+}
+
+.welcome-img-center {
+  width: 100%;
+  max-width: 280px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin: 0 auto 25px auto;
+  display: block;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  border: 1px solid #e9d8a6;
+}
+
+.countdown-container {
+  background-color: rgba(255, 255, 255, 0.6);
+  border: 1px solid #e9d8a6;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 25px;
+}
+
+.countdown-container label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #264653;
+}
+
+.countdown-container input[type="date"] {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  color: #264653;
+  margin-bottom: 10px;
+}
+
+#countdown-display {
+  font-size: 18px;
+  font-weight: bold;
+  color: #e76f51;
+}
+
+.reset-btn {
+  background-color: #b7094c !important;
+}
+
+.reset-btn:hover {
+  background-color: #a0063b !important;
+}
+
+.view-toggle-btn {
+  background-color: #2a9d8f !important;
+}
+
+.view-toggle-btn:hover {
+  background-color: #20786e !important;
+}
+
+.activity-item {
+  border-left: 4px solid #2a9d8f;
+  background-color: rgba(42, 157, 143, 0.1) !important;
+}
+
+.vault-container {
+  border: 1px solid #e9d8a6;
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.vault-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#vault-status-icon {
+  color: #e76f51;
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+.vault-field {
+  margin-bottom: 12px;
+}
+
+.vault-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: bold;
+  color: #264653;
+  margin-bottom: 4px;
+  text-align: left;
+}
+
+.vault-field input, .vault-field textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #264653;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.vault-field textarea {
+  resize: vertical;
+}
